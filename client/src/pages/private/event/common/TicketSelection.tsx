@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { eventType } from "../../../../interfaces";
+import type { eventType, userType } from "../../../../interfaces";
 import { Button, Input, message, Modal } from "antd";
 import { createBooking } from "../../../../apiservices/bookingService";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,12 @@ interface TicketType {
   limit: number;
 }
 
-function TicketSelection({ eventData }: { eventData: eventType }) {
+interface TicketSelectionProps {
+  eventData: eventType;
+  user: userType;
+}
+
+function TicketSelection({ eventData }: TicketSelectionProps) {
   const [selectedTicketType, setSelectedTicketType] = useState<string>("");
   const [maxCount, setMaxCount] = useState<number>(0);
   const [selectedTicketsCount, setSelectedTicketsCount] = useState<number>(1);

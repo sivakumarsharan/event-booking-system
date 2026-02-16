@@ -10,10 +10,15 @@ import {
   getDateFormat,
 } from "../../../helpers/dateTimeFormat";
 import TicketSelection from "./common/TicketSelection";
+import userGlobalStore from "../../../store/usersStore";  // Import Zustand store
 
 function EventInfoPage() {
   const [eventData, setEventData] = useState<eventType | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  // Get current user from Zustand global store
+  const { currentUser } = userGlobalStore();
+  
   const params: any = useParams();
 
   const getData = async () => {
@@ -107,9 +112,19 @@ function EventInfoPage() {
           </div>
         </div>
 
-        {Array.isArray(eventData.tickets) && eventData.tickets.length > 0 && (
+        {/* Only show ticket booking for non-admin users */}
+        {currentUser && !currentUser.isAdmin && Array.isArray(eventData.tickets) && eventData.tickets.length > 0 && (
           <div>
-            <TicketSelection eventData={eventData} />
+            <TicketSelection eventData={eventData} user={currentUser} />
+          </div>
+        )}
+        
+        {/* Show message for admins */}
+        {currentUser && currentUser.isAdmin && (
+          <div className="p-5 bg-blue-50 border border-blue-200 rounded">
+            <p className="text-blue-700 text-sm">
+              ℹ️ As an admin, you cannot book tickets for events. Ticket booking is available for regular users only.
+            </p>
           </div>
         )}
       </div>
